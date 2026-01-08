@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amira Learing Centre-Ujian Matematika Kelas 7 Semester 2</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Segoe UI,Arial;
+  background:linear-gradient(135deg,#5b1d6b,#2c0f3a);
+  color:#fff;
+}
+.container{max-width:1100px;margin:auto;padding:20px}
+h1{text-align:center}
+.question-box{
+  background:#3a1452;
+  padding:25px;
+  border-radius:16px;
+}
+.question{font-size:24px;margin-bottom:20px}
+.options{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:15px;
+}
+.option{
+  padding:18px;
+  font-size:20px;
+  border-radius:14px;
+  cursor:pointer;
+  text-align:center;
+  font-weight:bold;
+}
+.a{background:#1e88e5}
+.b{background:#43a047}
+.c{background:#f9a825;color:#000}
+.d{background:#e53935}
+.option.correct{background:#00c853!important}
+.option.wrong{background:#d50000!important}
+.next-btn{
+  margin-top:20px;
+  padding:15px 30px;
+  font-size:20px;
+  border:none;
+  border-radius:12px;
+  background:#00acc1;
+  color:#fff;
+  cursor:pointer;
+}
+.score-box{font-size:22px;margin-top:10px}
+.explanation{
+  display:none;
+  background:#2a0d3b;
+  padding:15px;
+  border-radius:12px;
+  margin-top:15px;
+}
+.timer{text-align:center;font-size:22px;margin-bottom:10px}
+.progress{height:8px;background:#222;border-radius:5px;overflow:hidden}
+.bar{height:100%;background:#00e5ff;width:100%}
+.coin{
+  position:fixed;
+  top:-40px;
+  font-size:32px;
+  animation:fall 1s linear forwards;
+}
+@keyframes fall{
+  to{top:100vh;opacity:0}
+}
+
+#questionImage{
+  text-align:center;
+  margin-bottom:15px;
+}
+#questionImage img{
+  max-width:300px;
+  width:100%;
+  border-radius:14px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.4);
+}
+
+.top-photo{
+  display:flex;
+  justify-content:center;
+  margin:20px 0;
+}
+
+.top-photo img{
+  max-width:350px;
+  width:100%;
+  border-radius:18px;
+  box-shadow:0 0 20px rgba(0,255,255,0.6);
+  animation:glow 2s infinite alternate;
+}
+
+@keyframes glow{
+  from{box-shadow:0 0 10px rgba(0,255,255,0.4)}
+  to{box-shadow:0 0 25px rgba(0,255,255,0.9)}
+}
+
+
+</style>
+</head>
+
+<body>
+<div class="container">
+  <h1>LATIHAN SOAL MATEMATIKA KELAS 4 SD BERSAMA AMIRA LEARNING CENTRE</h1>
+
+<div class="top-photo">
+  <img src="amira.png" alt="Foto Ujian">
+</div>
+
+
+  <div class="timer" id="timer">⏱ 01:00:00</div>
+  <div class="progress"><div class="bar" id="bar"></div></div>
+
+  <div id="questionImage"></div>
+    <div class="question" id="question"></div>
+    <div class="options" id="options"></div>
+    <button class="next-btn" onclick="nextQuestion()">Soal Berikutnya</button>
+    <button class="next-btn" onclick="prevQuestion()">⬅ Soal Sebelumnya</button>
+
+    <div class="score-box" id="scoreBox"></div>
+    <div class="explanation" id="explanation"></div>
+  </div>
+</div>
+
+<audio id="soundTrue" src="correct.mp3"></audio>
+<audio id="soundFalse" src="incorrect.mp3"></audio>
+
+<script>
+// ================= SOAL MATEMATIKA KELAS 4 (40 SOAL) =================
+const questions = [
+
+/* ===== BILANGAN CACAH ===== */
+{q:"Hasil dari 3.456 + 2.789 adalah …", options:["6.145","6.235","6.245","6.255"], correct:1, solution:"3.456 + 2.789 = 6.245"},
+{q:"Nilai tempat angka 7 pada bilangan 7.842 adalah …", options:["Satuan","Puluhan","Ratusan","Ribuan"], correct:3, solution:"Angka 7 berada di ribuan."},
+{q:"Bentuk panjang dari 5.204 adalah …", options:["5.000 + 200 + 4","5.000 + 20 + 4","500 + 200 + 4","5.200 + 4"], correct:0, solution:"Bentuk panjang memisahkan nilai tempat."},
+{q:"Bilangan terbesar dari 4.321, 4.312, dan 4.213 adalah …", options:["4.213","4.312","4.321","4.231"], correct:2, solution:"4.321 adalah yang terbesar."},
+
+/* ===== OPERASI HITUNG ===== */
+{q:"Hasil dari 8.000 − 3.275 adalah …", options:["4.625","4.725","4.735","4.825"], correct:1, solution:"8.000 − 3.275 = 4.725"},
+{q:"Hasil dari 324 × 4 adalah …", options:["1.196","1.256","1.296","1.316"], correct:2, solution:"324 × 4 = 1.296"},
+{q:"Hasil dari 936 ÷ 3 adalah …", options:["302","312","322","332"], correct:1, solution:"936 ÷ 3 = 312"},
+{q:"Sifat perkalian yang hasilnya tetap walau urutan diubah disebut …", options:["Asosiatif","Komutatif","Distributif","Identitas"], correct:1, solution:"Komutatif: a × b = b × a"},
+
+/* ===== PECAHAN ===== */
+{q:"Pecahan yang senilai dengan 1/2 adalah …", options:["2/3","2/4","3/5","4/5"], correct:1, solution:"1/2 = 2/4"},
+{q:"Hasil dari 1/4 + 1/4 adalah …", options:["1/8","1/4","1/2","2/4"], correct:2, solution:"1/4 + 1/4 = 1/2"},
+{q:"Pecahan terbesar adalah …", options:["1/3","2/6","3/4","4/8"], correct:2, solution:"3/4 paling besar."},
+{q:"Pecahan 5/10 disederhanakan menjadi …", options:["1/2","2/5","3/5","5/2"], correct:0, solution:"5/10 = 1/2"},
+
+/* ===== KPK & FPB ===== */
+{q:"KPK dari 6 dan 8 adalah …", options:["12","18","24","48"], correct:2, solution:"Kelipatan persekutuan terkecilnya 24"},
+{q:"FPB dari 12 dan 18 adalah …", options:["2","3","6","9"], correct:2, solution:"Faktor persekutuan terbesar adalah 6"},
+{q:"KPK dari 4 dan 10 adalah …", options:["10","20","30","40"], correct:1, solution:"KPK = 20"},
+{q:"FPB dari 16 dan 24 adalah …", options:["4","6","8","12"], correct:2, solution:"FPB = 8"},
+
+/* ===== BANGUN DATAR ===== */
+{q:"Bangun datar yang memiliki 4 sisi sama panjang adalah …", options:["Persegi","Persegi panjang","Segitiga","Lingkaran"], correct:0, solution:"Persegi memiliki 4 sisi sama panjang"},
+{q:"Jumlah sudut pada segitiga adalah …", options:["2","3","4","5"], correct:1, solution:"Segitiga memiliki 3 sudut"},
+{q:"Rumus keliling persegi adalah …", options:["s × s","4 × s","2 × p","p × l"], correct:1, solution:"Keliling persegi = 4 × sisi"},
+{q:"Persegi panjang memiliki sisi berhadapan yang …", options:["Berbeda","Tidak sama","Sama panjang","Miring"], correct:2, solution:"Sisi berhadapan sama panjang"},
+
+/* ===== PENGUKURAN ===== */
+{q:"1 meter sama dengan … cm", options:["10","100","1.000","10.000"], correct:1, solution:"1 m = 100 cm"},
+{q:"2 kg = … gram", options:["200","2.000","20.000","200.000"], correct:1, solution:"2 kg = 2.000 gram"},
+{q:"Alat untuk mengukur suhu adalah …", options:["Penggaris","Timbangan","Termometer","Meteran"], correct:2, solution:"Suhu diukur dengan termometer"},
+{q:"Satuan waktu untuk satu jam adalah … menit", options:["30","45","60","90"], correct:2, solution:"1 jam = 60 menit"},
+
+/* ===== SOAL CERITA ===== */
+{q:"Ani memiliki 125 kelereng. Ia membeli lagi 275 kelereng. Jumlah kelereng Ani sekarang adalah …", options:["300","350","400","450"], correct:2, solution:"125 + 275 = 400"},
+{q:"Sebuah toko memiliki 600 permen. Sebanyak 185 permen terjual. Sisa permen adalah …", options:["405","415","425","435"], correct:1, solution:"600 − 185 = 415"},
+{q:"Setiap kotak berisi 8 pensil. Jika ada 7 kotak, jumlah pensil adalah …", options:["48","54","56","64"], correct:2, solution:"7 × 8 = 56"},
+{q:"Ibu membagi 24 kue kepada 6 anak sama banyak. Setiap anak mendapat …", options:["2","3","4","6"], correct:2, solution:"24 ÷ 6 = 4"},
+
+/* ===== HOTS ===== */
+{q:"Bilangan yang jika dikali 7 hasilnya 56 adalah …", options:["6","7","8","9"], correct:2, solution:"8 × 7 = 56"},
+{q:"Manakah yang nilainya paling kecil?", options:["1/2","2/4","3/6","1/4"], correct:3, solution:"1/4 paling kecil"},
+{q:"Jika panjang sisi persegi 9 cm, kelilingnya adalah …", options:["18","27","36","81"], correct:2, solution:"Keliling = 4 × 9 = 36"},
+{q:"Jumlah sudut pada persegi panjang adalah …", options:["2","3","4","5"], correct:2, solution:"Persegi panjang memiliki 4 sudut"}
+
+];
+
+// ============ LOGIC ============
+let index=0,score=0,locked=false;
+let totalTime=3600;
+const nilaiPerSoal=100/questions.length;
+
+const benar=document.getElementById("soundTrue");
+const salah=document.getElementById("soundFalse");
+
+function loadQuestion(){
+  locked=false;
+  document.getElementById("explanation").style.display="none";
+  document.getElementById("scoreBox").innerText="Skor: "+score.toFixed(1);
+  const q=questions[index];
+  const imgBox = document.getElementById("questionImage");
+imgBox.innerHTML = "";
+
+if(q.img){
+  imgBox.innerHTML = `<img src="${q.img}" alt="gambar soal">`;
+}
+
+document.getElementById("question").innerText = (index+1)+". "+q.q;
+
+  const opt=document.getElementById("options");
+  opt.innerHTML="";
+  q.options.forEach((o,i)=>{
+    const d=document.createElement("div");
+    d.className="option "+["a","b","c","d"][i];
+    d.innerText=o;
+    d.onclick=()=>selectAnswer(d,i);
+    opt.appendChild(d);
+  });
+}
+
+function selectAnswer(el,i){
+  if(locked) return;
+  locked=true;
+  const q=questions[index];
+  document.querySelectorAll(".option")[q.correct].classList.add("correct");
+
+  if(i===q.correct){
+    score+=nilaiPerSoal;
+    benar.play();
+    dropCoin();
+  }else{
+    el.classList.add("wrong");
+    salah.play();
+  }
+
+  const exp=document.getElementById("explanation");
+  exp.style.display="block";
+  exp.innerHTML="<b>Kunci Jawaban:</b> "+q.options[q.correct]+"<br><b>Pembahasan:</b> "+q.solution;
+}
+
+function nextQuestion(){
+  if(index<questions.length-1){
+    index++;
+    loadQuestion();
+  }else{
+    finish();
+  }
+}
+
+function finish(){
+  clearInterval(timerInt);
+  document.getElementById("question").innerText="Ujian Selesai 🎉";
+  document.getElementById("options").innerHTML="";
+  document.getElementById("explanation").style.display="none";
+
+  document.getElementById("scoreBox").innerHTML =
+    "SKOR AKHIR: " + score.toFixed(1) +
+    "<br><br><button class='next-btn' onclick='restartExam()'>🔁 Mulai Ulang</button>";
+}
+
+
+function dropCoin(){
+  for(let i=0;i<5;i++){
+    const c=document.createElement("div");
+    c.className="coin";
+    c.style.left=Math.random()*100+"%";
+    c.innerText="🪙";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),1000);
+  }
+}
+
+// TIMER 1 JAM
+function updateTimer(){
+  let h=Math.floor(totalTime/3600);
+  let m=Math.floor((totalTime%3600)/60);
+  let s=totalTime%60;
+  document.getElementById("timer").innerText=
+  `⏱ ${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+  document.getElementById("bar").style.width=(totalTime/3600*100)+"%";
+  if(totalTime<=0) finish();
+  totalTime--;
+}
+const timerInt=setInterval(updateTimer,1000);
+
+loadQuestion();
+
+
+function prevQuestion(){
+  if(index > 0){
+    index--;
+    loadQuestion();
+  }
+}
+function restartExam(){
+  index = 0;
+  score = 0;
+  totalTime = 3600;
+  loadQuestion();
+  timerInt = setInterval(updateTimer,1000);
+}
+
+
+</script>
+</body>
+</html>
